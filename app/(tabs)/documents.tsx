@@ -93,14 +93,14 @@ export default function Documents() {
           <Text className="text-slate-400 text-sm mt-0.5">{todayFormatted()}</Text>
         </View>
 
-        <View className="mx-4 mb-4 p-4 bg-white rounded-2xl border border-sky-100">
+        <View className="mx-4 mb-4 p-4 bg-white rounded-2xl border-8 border-sky-100">
           <Text className="text-slate-400 text-xs font-semibold uppercase mb-3">Upload as</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View className="flex-row mb-4" style={{ gap: 8 }}>
               {DOC_TYPES.map(t => (
                 <TouchableOpacity
                   key={t.value}
-                  className={`px-4 py-2 rounded-full border ${
+                  className={`px-4 py-2 rounded-full border-2 ${
                     selectedType === t.value ? 'bg-sky-600 border-sky-600' : 'bg-white border-sky-100'
                   }`}
                   onPress={() => setSelectedType(t.value)}
@@ -114,7 +114,7 @@ export default function Documents() {
           </ScrollView>
 
           <TouchableOpacity
-            className="flex-row items-center justify-center border-2 border-dashed border-sky-200 bg-sky-50 rounded-xl py-5"
+            className="flex-row items-center justify-center border-4 border-dashed border-sky-200 bg-sky-50 rounded-xl py-5"
             onPress={handlePick}
           >
             <Plus size={20} color="#0284c7" />
@@ -128,10 +128,10 @@ export default function Documents() {
           </View>
         ) : (
           DOC_TYPES.filter(t => docs.some(d => d.type === t.value)).map(t => (
-            <View key={t.value} className="mx-4 mb-4 p-4 bg-white rounded-2xl border border-sky-100">
+            <View key={t.value} className="mx-4 mb-4 p-4 bg-white rounded-2xl border-8 border-sky-100">
               <Text className="text-slate-400 text-xs font-semibold uppercase mb-2">{t.label}</Text>
               {docs.filter(d => d.type === t.value).map(doc => (
-                <View key={doc.id} className="flex-row items-center py-3 border-b border-sky-50">
+                <View key={doc.id} className="flex-row items-center py-3 border-b-2 border-sky-50">
                   <File size={18} color="#94a3b8" />
                   <View className="flex-1 ml-3">
                     <Text className="text-slate-700 font-medium" numberOfLines={1}>{doc.name}</Text>

@@ -235,7 +235,7 @@ export default function DayDetail() {
               <Text className="text-white text-base font-bold">+ {tapAmount} ml</Text>
             </TouchableOpacity>
             {fluidLogs.map(e => (
-              <View key={e.id} className="flex-row items-center justify-between py-2.5 border-b border-sky-50">
+              <View key={e.id} className="flex-row items-center justify-between py-2.5 border-b-2 border-sky-50">
                 <Text className="text-slate-700 font-medium">{e.amount_ml} ml</Text>
                 <View className="flex-row items-center" style={{ gap: 12 }}>
                   <Text className="text-slate-400 text-sm">{e.created_at.slice(11, 16)}</Text>
@@ -276,7 +276,7 @@ export default function DayDetail() {
               </View>
             </View>
             {fluidRemoved !== null && (
-              <View className="mb-4 pt-3 border-t border-sky-50 items-center">
+              <View className="mb-4 pt-3 border-t-2 border-sky-50 items-center">
                 <Text className="text-slate-500 text-sm">Fluid removed</Text>
                 <Text className="text-xl font-bold text-sky-700 mt-0.5">{fluidRemoved} L</Text>
               </View>
@@ -295,7 +295,7 @@ export default function DayDetail() {
               ))}
             </View>
             <TextInput
-              className="border border-sky-100 rounded-xl px-4 py-3 text-lg text-slate-700 mb-3"
+              className="border-2 border-sky-100 rounded-xl px-4 py-3 text-lg text-slate-700 mb-3"
               keyboardType="decimal-pad"
               placeholder="Weight in kg"
               placeholderTextColor="#94a3b8"
@@ -313,7 +313,7 @@ export default function DayDetail() {
           <SectionCard icon={<Heart size={16} color="#dc2626" />} title="Blood Pressure">
             <View className="flex-row mb-1" style={{ gap: 8 }}>
               <TextInput
-                className="flex-1 border border-sky-100 rounded-xl px-3 py-3 text-lg text-slate-700 text-center"
+                className="flex-1 border-2 border-sky-100 rounded-xl px-3 py-3 text-lg text-slate-700 text-center"
                 keyboardType="numeric"
                 placeholder="Sys"
                 placeholderTextColor="#94a3b8"
@@ -324,7 +324,7 @@ export default function DayDetail() {
               />
               <TextInput
                 ref={diastolicRef}
-                className="flex-1 border border-sky-100 rounded-xl px-3 py-3 text-lg text-slate-700 text-center"
+                className="flex-1 border-2 border-sky-100 rounded-xl px-3 py-3 text-lg text-slate-700 text-center"
                 keyboardType="numeric"
                 placeholder="Dia"
                 placeholderTextColor="#94a3b8"
@@ -335,7 +335,7 @@ export default function DayDetail() {
               />
               <TextInput
                 ref={pulseRef}
-                className="flex-1 border border-sky-100 rounded-xl px-3 py-3 text-lg text-slate-700 text-center"
+                className="flex-1 border-2 border-sky-100 rounded-xl px-3 py-3 text-lg text-slate-700 text-center"
                 keyboardType="numeric"
                 placeholder="bpm"
                 placeholderTextColor="#94a3b8"
@@ -356,7 +356,7 @@ export default function DayDetail() {
             {bpLogs.map(bp => {
               const status = bpStatus(bp.systolic, bp.diastolic);
               return (
-                <View key={bp.id} className="flex-row items-center justify-between py-2.5 border-b border-sky-50">
+                <View key={bp.id} className="flex-row items-center justify-between py-2.5 border-b-2 border-sky-50">
                   <View>
                     <Text className="text-slate-700 font-semibold">
                       {bp.systolic}/{bp.diastolic}
@@ -385,7 +385,7 @@ export default function DayDetail() {
               {SYMPTOMS.map(symptom => (
                 <TouchableOpacity
                   key={symptom}
-                  className={`px-4 py-2 rounded-full border ${
+                  className={`px-4 py-2 rounded-full border-2 ${
                     selectedSymptoms.includes(symptom) ? 'bg-sky-600 border-sky-600' : 'bg-white border-sky-100'
                   }`}
                   onPress={() => toggleSymptom(symptom)}
@@ -398,7 +398,7 @@ export default function DayDetail() {
             </View>
             <Text className="text-slate-400 text-xs font-semibold uppercase mb-2">Notes</Text>
             <TextInput
-              className="border border-sky-100 rounded-xl px-4 py-3 text-slate-700 mb-4"
+              className="border-2 border-sky-100 rounded-xl px-4 py-3 text-slate-700 mb-4"
               style={{ minHeight: 80, textAlignVertical: 'top' }}
               multiline
               placeholder="Any concerns, how you're feeling..."
@@ -429,7 +429,7 @@ export default function DayDetail() {
 
 function SectionCard({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
   return (
-    <View className="mx-4 mb-3 p-4 bg-white rounded-2xl border border-sky-50">
+    <View className="mx-4 mb-3 p-4 bg-white rounded-2xl border-8 border-sky-50">
       <View className="flex-row items-center mb-4" style={{ gap: 8 }}>
         {icon}
         <Text className="text-slate-700 font-semibold text-base">{title}</Text>

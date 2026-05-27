@@ -60,10 +60,10 @@ export default function BloodPressure() {
             <Text className="text-slate-400 text-sm mt-0.5">{todayFormatted()}</Text>
           </View>
 
-          <View className="mx-4 mb-4 rounded-2xl border border-sky-100 bg-white p-4">
+          <View className="mx-4 mb-4 rounded-2xl border-8 border-sky-100 bg-white p-4">
             <View className="flex-row mb-1" style={{ gap: 10 }}>
               <TextInput
-                className="flex-1 border border-sky-100 rounded-xl px-3 py-4 text-lg text-slate-700 text-center"
+                className="flex-1 border-2 border-sky-100 rounded-xl px-3 py-4 text-lg text-slate-700 text-center"
                 keyboardType="numeric"
                 placeholder="Sys"
                 placeholderTextColor="#94a3b8"
@@ -74,7 +74,7 @@ export default function BloodPressure() {
               />
               <TextInput
                 ref={diastolicRef}
-                className="flex-1 border border-sky-100 rounded-xl px-3 py-4 text-lg text-slate-700 text-center"
+                className="flex-1 border-2 border-sky-100 rounded-xl px-3 py-4 text-lg text-slate-700 text-center"
                 keyboardType="numeric"
                 placeholder="Dia"
                 placeholderTextColor="#94a3b8"
@@ -85,7 +85,7 @@ export default function BloodPressure() {
               />
               <TextInput
                 ref={pulseRef}
-                className="flex-1 border border-sky-100 rounded-xl px-3 py-4 text-lg text-slate-700 text-center"
+                className="flex-1 border-2 border-sky-100 rounded-xl px-3 py-4 text-lg text-slate-700 text-center"
                 keyboardType="numeric"
                 placeholder="bpm"
                 placeholderTextColor="#94a3b8"
@@ -107,12 +107,12 @@ export default function BloodPressure() {
           </View>
 
           {entries.length > 0 && (
-            <View className="mx-4 mb-8 rounded-2xl border border-sky-100 bg-white p-4">
+            <View className="mx-4 mb-8 rounded-2xl border-8 border-sky-100 bg-white p-4">
               <Text className="text-slate-400 text-xs font-semibold uppercase mb-2">Today's Readings</Text>
               {entries.map((e) => {
                 const status = bpStatus(e.systolic, e.diastolic);
                 return (
-                  <View key={e.id} className="flex-row items-center justify-between py-3 border-b border-sky-50">
+                  <View key={e.id} className="flex-row items-center justify-between py-3 border-b-2 border-sky-50">
                     <View>
                       <Text className="text-slate-700 font-semibold text-base">
                         {e.systolic}/{e.diastolic}

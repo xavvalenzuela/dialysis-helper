@@ -132,6 +132,7 @@ Reactivity: `addDatabaseChangeListener` + `enableChangeListener: true` on SQLite
 - [ ] Charts / trend views for weight and BP over time
 - [ ] Dry weight target setting and tracking
 - [ ] Onboarding flow for new users
+- [ ] Export all documents per type as ZIP
 - [ ] EAS Build setup, signing, Play Store submission
 
 ---

@@ -50,7 +50,7 @@ export default function Weight() {
             <Text className="text-slate-400 text-sm mt-0.5">{todayFormatted()}</Text>
           </View>
 
-          <View className="mx-4 mb-4 p-4 bg-white rounded-2xl border border-sky-100">
+          <View className="mx-4 mb-4 p-4 bg-white rounded-2xl border-8 border-sky-100">
             <View className="flex-row">
               <View className="flex-1 items-center">
                 <Text className="text-xs text-slate-500 uppercase">Pre-Dialysis</Text>
@@ -80,14 +80,14 @@ export default function Weight() {
             </View>
 
             {fluidRemoved !== null && (
-              <View className="mt-4 pt-3 border-t border-sky-200 items-center">
+              <View className="mt-4 pt-3 border-t-2 border-sky-200 items-center">
                 <Text className="text-slate-500 text-sm">Fluid removed</Text>
                 <Text className="text-xl font-bold text-sky-700 mt-0.5">{fluidRemoved} L</Text>
               </View>
             )}
           </View>
 
-          <View className="mx-4 mb-8 p-4 bg-white rounded-2xl border border-sky-100">
+          <View className="mx-4 mb-8 p-4 bg-white rounded-2xl border-8 border-sky-100">
             <View className="flex-row bg-slate-100 rounded-xl p-1 mb-4">
               {(['pre', 'post'] as const).map(t => (
                 <TouchableOpacity
@@ -103,7 +103,7 @@ export default function Weight() {
             </View>
 
             <TextInput
-              className="border border-slate-300 rounded-xl px-4 py-4 text-xl text-slate-700 mb-4"
+              className="border-2 border-slate-300 rounded-xl px-4 py-4 text-xl text-slate-700 mb-4"
               keyboardType="decimal-pad"
               placeholder="Weight in kg"
               placeholderTextColor="#94a3b8"

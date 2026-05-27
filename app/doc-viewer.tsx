@@ -38,7 +38,7 @@ export default function DocViewer() {
   return (
     <SafeAreaView className="flex-1 bg-slate-900">
       {/* Header */}
-      <View className="flex-row items-center px-4 py-3 border-b border-slate-700">
+      <View className="flex-row items-center px-4 py-3 border-b-2 border-slate-700">
         <TouchableOpacity onPress={() => router.back()} className="mr-3 p-1">
           <ChevronLeft size={24} color="#e2e8f0" />
         </TouchableOpacity>
@@ -49,7 +49,7 @@ export default function DocViewer() {
 
       {/* Zoom controls — PDF only */}
       {isPdf && !error && (
-        <View className="flex-row items-center justify-center py-2 border-b border-slate-700" style={{ gap: 28 }}>
+        <View className="flex-row items-center justify-center py-2 border-b-2 border-slate-700" style={{ gap: 28 }}>
           <TouchableOpacity onPress={zoomOut} className="p-2">
             <ZoomOut size={20} color={scale <= 0.5 ? '#475569' : '#94a3b8'} />
           </TouchableOpacity>

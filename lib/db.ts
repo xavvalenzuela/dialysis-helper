@@ -54,6 +54,19 @@ export async function initializeDb(db: SQLite.SQLiteDatabase) {
     INSERT OR IGNORE INTO settings (key, value) VALUES ('fluid_tap_ml', '300');
   `);
 
+  // If this is an existing install with data, skip onboarding
+  await db.execAsync(`
+    INSERT OR IGNORE INTO settings (key, value)
+    SELECT 'onboarded', '1' WHERE EXISTS (
+      SELECT 1 FROM fluid_logs
+      UNION ALL SELECT 1 FROM weight_logs
+      UNION ALL SELECT 1 FROM bp_logs
+      UNION ALL SELECT 1 FROM symptom_logs
+      UNION ALL SELECT 1 FROM documents
+      LIMIT 1
+    );
+  `);
+
   // Migrate: drop NOT NULL on pulse if the existing table still has it
   const tableInfo = await db.getAllAsync<{ name: string; notnull: number }>(
     `PRAGMA table_info('bp_logs')`,

@@ -6,6 +6,11 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0ea5e9"
+    },
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true
@@ -25,7 +30,8 @@
       "expo-router",
       "expo-status-bar",
       "expo-sqlite",
-      "expo-sharing"
+      "expo-sharing",
+      "expo-splash-screen"
     ],
     "experiments": {
       "typedRoutes": true

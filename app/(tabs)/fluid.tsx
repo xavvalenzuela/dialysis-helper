@@ -73,12 +73,12 @@ export default function Fluid() {
         </View>
 
         {showSettings && (
-          <View className="mx-4 mb-4 p-4 bg-sky-50 rounded-2xl border border-sky-100">
+          <View className="mx-4 mb-4 p-4 bg-sky-50 rounded-2xl border-8 border-sky-100">
             <Text className="font-semibold text-slate-700 mb-3">Settings</Text>
             <View className="flex-row items-center mb-3">
               <Text className="text-slate-600 flex-1">Daily limit (ml)</Text>
               <TextInput
-                className="border border-sky-200 rounded-lg px-3 py-1.5 w-24 text-center text-slate-700"
+                className="border-2 border-sky-200 rounded-lg px-3 py-1.5 w-24 text-center text-slate-700"
                 keyboardType="numeric"
                 value={limitInput}
                 onChangeText={setLimitInput}
@@ -87,7 +87,7 @@ export default function Fluid() {
             <View className="flex-row items-center mb-4">
               <Text className="text-slate-600 flex-1">Tap amount (ml)</Text>
               <TextInput
-                className="border border-sky-200 rounded-lg px-3 py-1.5 w-24 text-center text-slate-700"
+                className="border-2 border-sky-200 rounded-lg px-3 py-1.5 w-24 text-center text-slate-700"
                 keyboardType="numeric"
                 value={tapInput}
                 onChangeText={setTapInput}
@@ -100,7 +100,7 @@ export default function Fluid() {
         )}
 
         {/* Main progress card */}
-        <View className="mx-4 mb-4 rounded-2xl border border-sky-100 bg-white overflow-hidden">
+        <View className="mx-4 mb-4 rounded-2xl border-8 border-sky-100 bg-white overflow-hidden">
           <View className="items-center pt-6 pb-2">
             <ProgressRing
               progress={progress}
@@ -117,7 +117,7 @@ export default function Fluid() {
           </View>
 
           {/* Stats row */}
-          <View className="flex-row border-t border-sky-50 mx-4 mt-2 pt-3 pb-2" style={{ gap: 0 }}>
+          <View className="flex-row border-t-2 border-sky-50 mx-4 mt-2 pt-3 pb-2" style={{ gap: 0 }}>
             <View className="flex-1 items-center">
               <Text className="text-xl font-bold text-sky-700">{entries.length}</Text>
               <Text className="text-xs text-slate-400 mt-0.5">{entries.length === 1 ? 'sip' : 'sips'}</Text>
@@ -151,12 +151,12 @@ export default function Fluid() {
 
         {/* Log card */}
         {entries.length > 0 && (
-          <View className="mx-4 mb-8 rounded-2xl border border-sky-100 bg-white p-4">
+          <View className="mx-4 mb-8 rounded-2xl border-8 border-sky-100 bg-white p-4">
             <Text className="text-slate-400 text-xs font-semibold uppercase mb-2">
               Today's Log · {entries.length} {entries.length === 1 ? 'entry' : 'entries'}
             </Text>
             {entries.map((e, i) => (
-              <View key={e.id} className="flex-row items-center justify-between py-3 border-b border-sky-50">
+              <View key={e.id} className="flex-row items-center justify-between py-3 border-b-2 border-sky-50">
                 <View className="flex-row items-center" style={{ gap: 8 }}>
                   <Text style={{ fontSize: 16 }}>💧</Text>
                   <Text className="text-slate-700 font-medium">{e.amount_ml} ml</Text>

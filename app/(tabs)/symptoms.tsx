@@ -54,13 +54,13 @@ export default function Symptoms() {
             <Text className="text-slate-400 text-sm mt-0.5">{todayFormatted()}</Text>
           </View>
 
-          <View className="mx-4 mb-8 p-4 bg-white rounded-2xl border border-sky-100">
+          <View className="mx-4 mb-8 p-4 bg-white rounded-2xl border-8 border-sky-100">
             <Text className="text-slate-400 text-xs font-semibold uppercase mb-3">Symptoms</Text>
             <View className="flex-row flex-wrap mb-5" style={{ gap: 8 }}>
               {SYMPTOMS.map(symptom => (
                 <TouchableOpacity
                   key={symptom}
-                  className={`px-4 py-2.5 rounded-full border ${
+                  className={`px-4 py-2.5 rounded-full border-2 ${
                     selected.includes(symptom)
                       ? 'bg-sky-600 border-sky-600'
                       : 'bg-white border-sky-100'
@@ -76,7 +76,7 @@ export default function Symptoms() {
 
             <Text className="text-slate-400 text-xs font-semibold uppercase mb-3">Notes</Text>
             <TextInput
-              className="border border-sky-100 rounded-xl px-4 py-3 text-slate-700 mb-4"
+              className="border-2 border-sky-100 rounded-xl px-4 py-3 text-slate-700 mb-4"
               style={{ minHeight: 96, textAlignVertical: 'top' }}
               multiline
               placeholder="Any concerns, how you're feeling..."

@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0ea5e9"/>
+      <stop offset="100%" style="stop-color:#0369a1"/>
+    </linearGradient>
+    <linearGradient id="drop3" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="100%" style="stop-color:#e0f2fe"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="224" fill="url(#bg3)"/>
+
+  <!-- Two bloodlines forming a loop/halo circuit behind the droplet -->
+  <!-- Top curved line — teal, arcs OVER the top of the droplet -->
+  <path d="M 180 430 C 160 280, 280 140, 512 130 C 744 140, 864 280, 844 430"
+        stroke="#134e4a" stroke-width="80" stroke-linecap="round" fill="none" opacity="0.8"/>
+  <path d="M 180 430 C 160 280, 280 140, 512 130 C 744 140, 864 280, 844 430"
+        stroke="#0d9488" stroke-width="56" stroke-linecap="round" fill="none" opacity="0.9"/>
+  <path d="M 180 430 C 160 280, 280 140, 512 130 C 744 140, 864 280, 844 430"
+        stroke="#5eead4" stroke-width="16" stroke-linecap="round" fill="none" opacity="0.55"/>
+
+  <!-- Bottom curved line — indigo, arcs UNDER the bottom of the droplet -->
+  <path d="M 180 600 C 160 760, 290 890, 512 898 C 734 890, 864 760, 844 600"
+        stroke="#312e81" stroke-width="80" stroke-linecap="round" fill="none" opacity="0.8"/>
+  <path d="M 180 600 C 160 760, 290 890, 512 898 C 734 890, 864 760, 844 600"
+        stroke="#4338ca" stroke-width="56" stroke-linecap="round" fill="none" opacity="0.9"/>
+  <path d="M 180 600 C 160 760, 290 890, 512 898 C 734 890, 864 760, 844 600"
+        stroke="#a5b4fc" stroke-width="16" stroke-linecap="round" fill="none" opacity="0.55"/>
+
+  <!-- Left vertical connector joining the two arcs -->
+  <path d="M 180 430 L 180 600"
+        stroke="#312e81" stroke-width="80" stroke-linecap="round" fill="none" opacity="0.8"/>
+  <path d="M 180 430 L 180 600"
+        stroke="#6d28d9" stroke-width="56" stroke-linecap="round" fill="none" opacity="0.9"/>
+  <path d="M 180 430 L 180 600"
+        stroke="#c4b5fd" stroke-width="16" stroke-linecap="round" fill="none" opacity="0.55"/>
+
+  <!-- Right vertical connector -->
+  <path d="M 844 430 L 844 600"
+        stroke="#134e4a" stroke-width="80" stroke-linecap="round" fill="none" opacity="0.8"/>
+  <path d="M 844 430 L 844 600"
+        stroke="#0d9488" stroke-width="56" stroke-linecap="round" fill="none" opacity="0.9"/>
+  <path d="M 844 430 L 844 600"
+        stroke="#5eead4" stroke-width="16" stroke-linecap="round" fill="none" opacity="0.55"/>
+
+  <!-- Port dots at left and right mid-points -->
+  <circle cx="180" cy="512" r="50" fill="#1e1b4b" opacity="0.85"/>
+  <circle cx="180" cy="512" r="32" fill="#6d28d9"/>
+  <circle cx="168" cy="500" r="11" fill="#ddd6fe" opacity="0.7"/>
+
+  <circle cx="844" cy="512" r="50" fill="#042f2e" opacity="0.85"/>
+  <circle cx="844" cy="512" r="32" fill="#0f766e"/>
+  <circle cx="832" cy="500" r="11" fill="#99f6e4" opacity="0.7"/>
+
+  <!-- Water droplet — centered in the loop -->
+  <path d="M512 200 C512 200 308 455 308 592 C308 709 400 802 512 802 C624 802 716 709 716 592 C716 455 512 200 512 200Z"
+        fill="url(#drop3)" opacity="0.97"/>
+
+  <!-- Shine -->
+  <ellipse cx="453" cy="492" rx="44" ry="72" fill="white" opacity="0.32" transform="rotate(-20 453 492)"/>
+
+  <!-- Medical cross -->
+  <rect x="492" y="614" width="40" height="116" rx="8" fill="#0369a1" opacity="0.48"/>
+  <rect x="454" y="652" width="116" height="40" rx="8" fill="#0369a1" opacity="0.48"/>
+</svg>

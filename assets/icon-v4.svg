@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0ea5e9"/>
+      <stop offset="100%" style="stop-color:#0369a1"/>
+    </linearGradient>
+    <linearGradient id="drop" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="100%" style="stop-color:#e0f2fe"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="224" fill="url(#bg)"/>
+
+  <!--
+    Rounded-rectangle loop bloodline.
+    Top half: goes up left side → flat across top → down right side.
+    Bottom half: goes down left side → flat across bottom → up right side.
+    Side connectors bridge the two halves at x=152 and x=872.
+    Ports sit at the midpoint of each connector.
+  -->
+
+  <!-- TOP half (U opening downward) -->
+  <path d="M 152 440 L 152 228 Q 152 148 232 148 L 792 148 Q 872 148 872 228 L 872 440"
+        stroke="#075985" stroke-width="86" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.75"/>
+  <path d="M 152 440 L 152 228 Q 152 148 232 148 L 792 148 Q 872 148 872 228 L 872 440"
+        stroke="#38bdf8" stroke-width="62" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.95"/>
+  <path d="M 152 440 L 152 228 Q 152 148 232 148 L 792 148 Q 872 148 872 228 L 872 440"
+        stroke="#f0f9ff" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.6"/>
+
+  <!-- BOTTOM half (U opening upward) -->
+  <path d="M 152 590 L 152 802 Q 152 882 232 882 L 792 882 Q 872 882 872 802 L 872 590"
+        stroke="#075985" stroke-width="86" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.75"/>
+  <path d="M 152 590 L 152 802 Q 152 882 232 882 L 792 882 Q 872 882 872 802 L 872 590"
+        stroke="#38bdf8" stroke-width="62" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.95"/>
+  <path d="M 152 590 L 152 802 Q 152 882 232 882 L 792 882 Q 872 882 872 802 L 872 590"
+        stroke="#f0f9ff" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.6"/>
+
+  <!-- LEFT side connector -->
+  <path d="M 152 440 L 152 590"
+        stroke="#075985" stroke-width="86" stroke-linecap="round" fill="none" opacity="0.75"/>
+  <path d="M 152 440 L 152 590"
+        stroke="#38bdf8" stroke-width="62" stroke-linecap="round" fill="none" opacity="0.95"/>
+  <path d="M 152 440 L 152 590"
+        stroke="#f0f9ff" stroke-width="32" stroke-linecap="round" fill="none" opacity="0.6"/>
+
+  <!-- RIGHT side connector -->
+  <path d="M 872 440 L 872 590"
+        stroke="#075985" stroke-width="86" stroke-linecap="round" fill="none" opacity="0.75"/>
+  <path d="M 872 440 L 872 590"
+        stroke="#38bdf8" stroke-width="62" stroke-linecap="round" fill="none" opacity="0.95"/>
+  <path d="M 872 440 L 872 590"
+        stroke="#f0f9ff" stroke-width="32" stroke-linecap="round" fill="none" opacity="0.6"/>
+
+  <!-- Port connectors — left and right mid-points -->
+  <circle cx="152" cy="512" r="54" fill="#0c4a6e" opacity="0.9"/>
+  <circle cx="152" cy="512" r="36" fill="#38bdf8"/>
+  <circle cx="139" cy="499" r="12" fill="#f0f9ff" opacity="0.7"/>
+
+  <circle cx="872" cy="512" r="54" fill="#0c4a6e" opacity="0.9"/>
+  <circle cx="872" cy="512" r="36" fill="#38bdf8"/>
+  <circle cx="859" cy="499" r="12" fill="#f0f9ff" opacity="0.7"/>
+
+  <!-- Water droplet -->
+  <path d="M512 200 C512 200 308 455 308 592 C308 709 400 802 512 802 C624 802 716 709 716 592 C716 455 512 200 512 200Z"
+        fill="url(#drop)" opacity="0.97"/>
+
+  <!-- Shine -->
+  <ellipse cx="453" cy="492" rx="44" ry="72" fill="white" opacity="0.32" transform="rotate(-20 453 492)"/>
+
+  <!-- Medical cross -->
+  <rect x="492" y="614" width="40" height="116" rx="8" fill="#7dd3fc" opacity="0.75"/>
+  <rect x="454" y="652" width="116" height="40" rx="8" fill="#7dd3fc" opacity="0.75"/>
+</svg>

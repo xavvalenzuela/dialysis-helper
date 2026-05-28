@@ -13,6 +13,12 @@ export default function Index() {
       .then(row => {
         setOnboarded(row?.value === '1');
         setReady(true);
+      })
+      .catch(err => {
+        console.error('[Index] DB query failed:', err);
+        // Default to onboarding so the app always navigates somewhere
+        setOnboarded(false);
+        setReady(true);
       });
   }, [db]);
 

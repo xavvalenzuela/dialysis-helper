@@ -53,8 +53,13 @@ export default function Documents() {
     try {
       const sourceFile = new FsFile(asset.uri);
       await sourceFile.copy(destFile);
+      if (!destFile.exists) {
+        throw new Error('File copy verification failed — destination missing');
+      }
       await addDocument(db, asset.name, selectedType, destFile.uri);
-    } catch {
+    } catch (err) {
+      console.error('[Documents] handlePick:', err);
+      try { destFile.delete(); } catch { /* ignore cleanup errors */ }
       Alert.alert('Error', 'Could not save the document. Please try again.');
     }
   };

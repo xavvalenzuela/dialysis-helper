@@ -110,6 +110,7 @@ export default function DayDetail() {
     : null;
 
   const handleSaveWeight = async () => {
+    if (!date) return;
     const kg = parseFloat(weightInput);
     if (isNaN(kg) || kg <= 0) return;
     setSavingWeight(true);
@@ -122,6 +123,7 @@ export default function DayDetail() {
   };
 
   const handleSaveBp = async () => {
+    if (!date) return;
     const s = parseInt(systolic, 10);
     const d = parseInt(diastolic, 10);
     const p = pulse.trim() ? parseInt(pulse, 10) : null;
@@ -145,6 +147,7 @@ export default function DayDetail() {
   };
 
   const handleSaveSymptoms = async () => {
+    if (!date) return;
     setSavingSymptoms(true);
     try {
       await addSymptomEntry(db, selectedSymptoms, notes, date);
@@ -225,7 +228,8 @@ export default function DayDetail() {
         await addDocument(db, `Day Log — ${date}`, 'log', destFile.uri);
       }
       Alert.alert('Exported', 'PDF saved to Documents → Logs');
-    } catch {
+    } catch (err) {
+      console.error('[DayLog] export error:', err);
       Alert.alert('Error', 'Could not export the log.');
     }
   };

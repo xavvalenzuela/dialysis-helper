@@ -54,6 +54,8 @@ export async function initializeDb(db: SQLite.SQLiteDatabase) {
     INSERT OR IGNORE INTO settings (key, value) VALUES ('fluid_limit_ml', '${DEFAULT_FLUID_LIMIT_ML}');
     INSERT OR IGNORE INTO settings (key, value) VALUES ('fluid_tap_ml', '${DEFAULT_TAP_AMOUNT_ML}');
     INSERT OR IGNORE INTO settings (key, value) VALUES ('user_name', '');
+    INSERT OR IGNORE INTO settings (key, value) VALUES ('notification_enabled', '0');
+    INSERT OR IGNORE INTO settings (key, value) VALUES ('notification_time', '08:00');
   `);
 
   // If this is an existing install with data, skip onboarding

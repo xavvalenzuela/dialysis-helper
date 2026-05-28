@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ScrollView, KeyboardAvoidingView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSQLiteContext, addDatabaseChangeListener } from 'expo-sqlite';
 import { useLocalSearchParams, router } from 'expo-router';
@@ -17,13 +17,17 @@ import {
 const SYMPTOMS = ['Chills', 'Cramping', 'Fatigue', 'Nausea', 'Headache'] as const;
 
 type FluidLog = { id: number; amount_ml: number; created_at: string };
-type WeightLog = { id: number; type: string; weight_kg: number };
+type WeightLog = { id: number; type: 'pre' | 'post'; weight_kg: number };
 type BpLog = { id: number; systolic: number; diastolic: number; pulse: number | null; created_at: string };
 type SymptomLog = { id: number; symptoms: string; notes: string | null };
 
 function formatDate(d: string) {
   const dt = new Date(`${d}T12:00:00`);
   return dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+}
+
+function escHtml(s: string) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function bpStatus(systolic: number, diastolic: number) {
@@ -35,7 +39,7 @@ function bpStatus(systolic: number, diastolic: number) {
 }
 
 export default function DayDetail() {
-  const { date } = useLocalSearchParams<{ date: string }>();
+  const { date } = useLocalSearchParams<{ date?: string }>();
   const db = useSQLiteContext();
 
   const [fluidLogs, setFluidLogs] = useState<FluidLog[]>([]);
@@ -154,7 +158,7 @@ export default function DayDetail() {
     const symptomRows = selectedSymptoms.length === 0 && !notes.trim()
       ? '<p class="empty">No symptoms logged</p>'
       : `${selectedSymptoms.map(s => `<span class="chip">${s}</span>`).join('')}
-         ${notes.trim() ? `<div class="notes">${notes.trim()}</div>` : ''}`;
+         ${notes.trim() ? `<div class="notes">${escHtml(notes.trim())}</div>` : ''}`;
 
     const html = `<!DOCTYPE html><html><head><meta charset="utf-8"/>
 <style>
@@ -201,7 +205,7 @@ export default function DayDetail() {
 
   return (
     <SafeAreaView className="flex-1 bg-slate-50">
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="flex-1">
+      <KeyboardAvoidingView behavior="padding" className="flex-1">
         <ScrollView>
           <View className="flex-row items-center px-4 py-5">
             <TouchableOpacity onPress={() => router.back()} className="mr-3 p-1">

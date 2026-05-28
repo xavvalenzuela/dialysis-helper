@@ -42,6 +42,11 @@ export default function Documents() {
     if (result.canceled || !result.assets?.[0]) return;
 
     const asset = result.assets[0];
+    const MAX_BYTES = 100 * 1024 * 1024; // 100 MB
+    if (asset.size !== undefined && asset.size > MAX_BYTES) {
+      Alert.alert('File too large', 'Please choose a file under 100 MB.');
+      return;
+    }
     const fileName = `${Date.now()}_${asset.name}`;
     const destFile = new FsFile(Paths.document, fileName);
 

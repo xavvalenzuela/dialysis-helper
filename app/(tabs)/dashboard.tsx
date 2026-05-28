@@ -89,7 +89,7 @@ export default function Dashboard() {
       <ScrollView>
         <View className="flex-row items-center justify-between px-4 py-5">
           <Text className="text-2xl font-bold text-sky-700">Dialysis Helper</Text>
-          <TouchableOpacity onPress={() => router.push('/onboarding' as any)} className="p-1" accessibilityLabel="Help and onboarding">
+          <TouchableOpacity onPress={() => router.push('/onboarding')} className="p-1" accessibilityLabel="Help and onboarding">
             <HelpCircle size={22} color="#94a3b8" />
           </TouchableOpacity>
         </View>

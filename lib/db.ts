@@ -94,6 +94,9 @@ export function todayFormatted() {
   return new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 }
 
+// Uses device local time intentionally — patients care about "today" in their own timezone.
+// Tradeoff: crossing midnight in a different timezone shifts which date entries are filed under.
+// Storing per-entry timezone metadata would be needed if cross-timezone accuracy becomes a requirement.
 export function todayISO() {
   const now = new Date();
   const y = now.getFullYear();

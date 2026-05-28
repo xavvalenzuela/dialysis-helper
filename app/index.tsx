@@ -17,6 +17,5 @@ export default function Index() {
   }, [db]);
 
   if (!ready) return <View style={{ flex: 1, backgroundColor: '#0ea5e9' }} />;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return <Redirect href={onboarded ? '/(tabs)/dashboard' as any : '/onboarding' as any} />;
+  return <Redirect href={onboarded ? '/(tabs)/dashboard' : '/onboarding'} />;
 }

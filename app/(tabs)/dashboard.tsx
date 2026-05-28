@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSQLiteContext, addDatabaseChangeListener } from 'expo-sqlite';
-import { ChevronLeft, ChevronRight, HelpCircle } from 'lucide-react-native';
+import { ChevronLeft, ChevronRight, Settings2 } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { todayISO } from '../../lib/db';
 
@@ -101,8 +101,8 @@ export default function Dashboard() {
               <Text className="text-slate-400 text-sm mt-0.5">Hello, {userName}</Text>
             ) : null}
           </View>
-          <TouchableOpacity onPress={() => router.push('/onboarding')} className="p-1" accessibilityLabel="Help and onboarding">
-            <HelpCircle size={22} color="#94a3b8" />
+          <TouchableOpacity onPress={() => router.push('/settings')} className="p-1" accessibilityLabel="Profile and settings">
+            <Settings2 size={22} color="#94a3b8" />
           </TouchableOpacity>
         </View>
 

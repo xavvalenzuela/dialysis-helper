@@ -90,6 +90,7 @@ export default function Onboarding() {
               { icon: <Scale size={22} color="#16a34a" />, bg: '#dcfce7', title: 'Weight Log', desc: 'Pre & post-dialysis weights, fluid removed' },
               { icon: <Heart size={22} color="#dc2626" />, bg: '#fee2e2', title: 'Blood Pressure', desc: 'Log readings with status indicators' },
               { icon: <FileText size={22} color="#d97706" />, bg: '#fef3c7', title: 'Symptom Journal', desc: 'Quick-tap checklist and free-text notes' },
+              { icon: <FolderOpen size={22} color="#7c3aed" />, bg: '#ede9fe', title: 'Documents', desc: 'Organize all your documents in one app' },
             ].map(item => (
               <View key={item.title} className="flex-row items-center mb-5" style={{ gap: 16 }}>
                 <View style={{ width: 48, height: 48, borderRadius: 14, backgroundColor: item.bg, alignItems: 'center', justifyContent: 'center' }}>

@@ -58,6 +58,7 @@ export default function DayDetail() {
   const diastolicRef = useRef<TextInput>(null);
   const pulseRef = useRef<TextInput>(null);
 
+  const [userName, setUserName] = useState('');
   const [symptomLog, setSymptomLog] = useState<SymptomLog | null>(null);
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
@@ -71,13 +72,14 @@ export default function DayDetail() {
 
   const load = useCallback(async () => {
     if (!date) return;
-    const [fl, wl, bl, sl, lim, tap] = await Promise.all([
+    const [fl, wl, bl, sl, lim, tap, nameRow] = await Promise.all([
       db.getAllAsync<FluidLog>('SELECT id, amount_ml, created_at FROM fluid_logs WHERE date = ? ORDER BY created_at ASC', [date]),
       db.getAllAsync<WeightLog>('SELECT id, type, weight_kg FROM weight_logs WHERE date = ?', [date]),
       db.getAllAsync<BpLog>('SELECT id, systolic, diastolic, pulse, created_at FROM bp_logs WHERE date = ? ORDER BY created_at DESC', [date]),
       db.getFirstAsync<SymptomLog>('SELECT id, symptoms, notes FROM symptom_logs WHERE date = ?', [date]),
       getSetting(db, 'fluid_limit_ml'),
       getSetting(db, 'fluid_tap_ml'),
+      db.getFirstAsync<{ value: string }>('SELECT value FROM settings WHERE key = ?', ['user_name']),
     ]);
     setFluidLogs(fl);
     setPreEntry(wl.find(w => w.type === 'pre') ?? null);
@@ -96,6 +98,7 @@ export default function DayDetail() {
     const tapNum = Number(tap);
     if (lim && !isNaN(limNum) && limNum > 0) setFluidLimit(limNum);
     if (tap && !isNaN(tapNum) && tapNum > 0) setTapAmount(tapNum);
+    if (nameRow?.value) setUserName(nameRow.value);
   }, [db, date]);
 
   useEffect(() => {
@@ -194,6 +197,7 @@ export default function DayDetail() {
 <style>
   body{font-family:Arial,sans-serif;color:#1e293b;padding:36px;font-size:14px}
   h1{color:#0284c7;font-size:22px;margin:0 0 4px}
+  .patient{color:#1e293b;font-size:15px;font-weight:600;margin-bottom:2px}
   .date{color:#64748b;font-size:13px;margin-bottom:28px}
   .section{margin-bottom:22px}
   .section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;border-bottom:1px solid #e2e8f0;padding-bottom:6px;margin-bottom:10px}
@@ -207,6 +211,7 @@ export default function DayDetail() {
   .footer{margin-top:40px;border-top:1px solid #e2e8f0;padding-top:12px;font-size:11px;color:#94a3b8;text-align:center}
 </style></head><body>
   <h1>Dialysis Helper — Day Log</h1>
+  ${userName ? `<div class="patient">${escHtml(userName)}</div>` : ''}
   <div class="date">${formatDate(date)}</div>
   <div class="section"><div class="section-title">Fluid Intake</div>${fluidRows}</div>
   <div class="section"><div class="section-title">Weight</div>${weightRows}</div>
@@ -219,7 +224,7 @@ export default function DayDetail() {
       const { uri: tempUri } = await Print.printToFileAsync({ html });
       const fileName = `log_${date}.pdf`;
       const destFile = new FsFile(Paths.document, fileName);
-      await new FsFile(tempUri).copy(destFile);
+      await new FsFile(tempUri).copy(destFile, { overwrite: true });
 
       const existing = await db.getFirstAsync<{ id: number }>(
         'SELECT id FROM documents WHERE uri = ?', [destFile.uri],

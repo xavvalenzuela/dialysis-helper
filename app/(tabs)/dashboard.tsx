@@ -21,6 +21,7 @@ export default function Dashboard() {
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth());
   const [dayData, setDayData] = useState<Record<string, DayData>>({});
+  const [userName, setUserName] = useState('');
   const today = todayISO();
 
   const load = useCallback(async () => {
@@ -59,6 +60,12 @@ export default function Dashboard() {
     return () => sub.remove();
   }, [load]);
 
+  useEffect(() => {
+    db.getFirstAsync<{ value: string }>('SELECT value FROM settings WHERE key = ?', ['user_name'])
+      .then(row => { if (row?.value) setUserName(row.value); })
+      .catch(() => {});
+  }, [db]);
+
   const MIN_YEAR = 2020;
   const MIN_MONTH = 0;
   const atMin = year === MIN_YEAR && month === MIN_MONTH;
@@ -88,7 +95,12 @@ export default function Dashboard() {
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView>
         <View className="flex-row items-center justify-between px-4 py-5">
-          <Text className="text-2xl font-bold text-sky-700">Dialysis Helper</Text>
+          <View>
+            <Text className="text-2xl font-bold text-sky-700">Dialysis Helper</Text>
+            {userName ? (
+              <Text className="text-slate-400 text-sm mt-0.5">Hello, {userName}</Text>
+            ) : null}
+          </View>
           <TouchableOpacity onPress={() => router.push('/onboarding')} className="p-1" accessibilityLabel="Help and onboarding">
             <HelpCircle size={22} color="#94a3b8" />
           </TouchableOpacity>

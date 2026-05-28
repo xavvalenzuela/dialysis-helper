@@ -53,6 +53,7 @@ export async function initializeDb(db: SQLite.SQLiteDatabase) {
 
     INSERT OR IGNORE INTO settings (key, value) VALUES ('fluid_limit_ml', '${DEFAULT_FLUID_LIMIT_ML}');
     INSERT OR IGNORE INTO settings (key, value) VALUES ('fluid_tap_ml', '${DEFAULT_TAP_AMOUNT_ML}');
+    INSERT OR IGNORE INTO settings (key, value) VALUES ('user_name', '');
   `);
 
   // If this is an existing install with data, skip onboarding

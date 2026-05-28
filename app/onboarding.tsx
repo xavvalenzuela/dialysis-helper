@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Image, ScrollView, Dimensions, TextInput,
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
-import { Droplets, Scale, Heart, FileText, Lock, FolderOpen } from 'lucide-react-native';
+import { Droplets, Scale, Heart, FileText, Lock, FolderOpen, User } from 'lucide-react-native';
 import { updateSetting } from '../lib/data';
 import { DEFAULT_FLUID_LIMIT_ML } from '../lib/constants';
 
@@ -13,6 +13,7 @@ const SLIDES = [
   { id: 'welcome' },
   { id: 'track' },
   { id: 'privacy' },
+  { id: 'name' },
   { id: 'fluid_limit' },
 ];
 
@@ -20,6 +21,7 @@ export default function Onboarding() {
   const db = useSQLiteContext();
   const scrollRef = useRef<ScrollView>(null);
   const [step, setStep] = useState(0);
+  const [nameInput, setNameInput] = useState('');
   const [limitInput, setLimitInput] = useState(String(DEFAULT_FLUID_LIMIT_ML));
 
   const limitValid = /^\d+$/.test(limitInput.trim()) && parseInt(limitInput) > 0;
@@ -33,6 +35,7 @@ export default function Onboarding() {
     await db.runAsync(
       `INSERT OR REPLACE INTO settings (key, value) VALUES ('onboarded', '1')`,
     );
+    await updateSetting(db, 'user_name', nameInput.trim());
     if (limitValid) {
       await updateSetting(db, 'fluid_limit_ml', limitInput.trim());
     }
@@ -120,7 +123,39 @@ export default function Onboarding() {
             </View>
           </View>
 
-          {/* Slide 4 — Fluid limit setup */}
+          {/* Slide 4 — Name */}
+          <View style={{ width }} className="flex-1 items-center justify-center px-8">
+            <View style={{ width: 80, height: 80, borderRadius: 24, backgroundColor: '#e0f2fe', alignItems: 'center', justifyContent: 'center', marginBottom: 28 }}>
+              <User size={36} color="#0284c7" />
+            </View>
+
+            <Text className="text-2xl font-bold text-sky-800 text-center mb-2">
+              What's your name?
+            </Text>
+            <Text className="text-slate-500 text-sm text-center leading-6 mb-8">
+              Your name will appear on exported{'\n'}day logs. This is optional.
+            </Text>
+
+            <View className="bg-white rounded-2xl border-8 border-sky-100 p-5 w-full">
+              <Text className="text-slate-400 text-xs font-semibold uppercase mb-3">Your name</Text>
+              <TextInput
+                className="text-2xl font-bold text-sky-700 text-center"
+                placeholder="e.g. John D."
+                placeholderTextColor="#cbd5e1"
+                value={nameInput}
+                onChangeText={setNameInput}
+                maxLength={50}
+                autoCapitalize="words"
+                accessibilityLabel="Your name"
+              />
+            </View>
+
+            <Text className="text-slate-400 text-xs text-center mt-4 leading-5">
+              Skip this if you prefer to stay anonymous.
+            </Text>
+          </View>
+
+          {/* Slide 5 — Fluid limit setup */}
           <View style={{ width }} className="flex-1 items-center justify-center px-8">
             <View style={{ width: 80, height: 80, borderRadius: 24, backgroundColor: '#e0f2fe', alignItems: 'center', justifyContent: 'center', marginBottom: 28 }}>
               <Droplets size={36} color="#0284c7" />

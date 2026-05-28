@@ -173,7 +173,7 @@ export default function Fluid() {
                 </View>
                 <View className="flex-row items-center" style={{ gap: 12 }}>
                   <Text className="text-slate-400 text-sm">{e.created_at.slice(11, 16)}</Text>
-                  <TouchableOpacity onPress={() => deleteFluidEntry(db, e.id)} accessibilityLabel="Delete fluid entry">
+                  <TouchableOpacity onPress={() => deleteFluidEntry(db, e.id).catch(() => {})} accessibilityLabel="Delete fluid entry">
                     <Trash2 size={16} color="#cbd5e1" />
                   </TouchableOpacity>
                 </View>

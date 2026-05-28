@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView, Alert, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSQLiteContext, addDatabaseChangeListener } from 'expo-sqlite';
 import { Trash2 } from 'lucide-react-native';
@@ -14,6 +14,7 @@ export default function Weight() {
   const [postEntry, setPostEntry] = useState<WeightLog | null>(null);
   const [type, setType] = useState<'pre' | 'post'>('pre');
   const [weightInput, setWeightInput] = useState('');
+  const [saving, setSaving] = useState(false);
 
   const load = useCallback(async () => {
     const rows = await db.getAllAsync<WeightLog>(
@@ -33,8 +34,15 @@ export default function Weight() {
   const handleSave = async () => {
     const kg = parseFloat(weightInput);
     if (isNaN(kg) || kg <= 0) return;
-    await addWeightEntry(db, type, kg);
-    setWeightInput('');
+    setSaving(true);
+    try {
+      await addWeightEntry(db, type, kg);
+      setWeightInput('');
+    } catch {
+      Alert.alert('Error', 'Could not save weight.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const fluidRemovedKg: number | null = preEntry && postEntry
@@ -43,7 +51,7 @@ export default function Weight() {
 
   return (
     <SafeAreaView className="flex-1 bg-slate-50">
-      <KeyboardAvoidingView behavior="padding" className="flex-1">
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="flex-1">
         <ScrollView>
           <View className="px-4 py-5">
             <Text className="text-2xl font-bold text-sky-700">Weight Log</Text>
@@ -59,7 +67,7 @@ export default function Weight() {
                 </Text>
                 <Text className="text-slate-400 text-sm">kg</Text>
                 {preEntry && (
-                  <TouchableOpacity className="mt-2" onPress={() => deleteWeightEntry(db, preEntry.id)} accessibilityLabel="Delete pre-dialysis weight">
+                  <TouchableOpacity className="mt-2" onPress={() => deleteWeightEntry(db, preEntry.id).catch(() => {})} accessibilityLabel="Delete pre-dialysis weight">
                     <Trash2 size={14} color="#cbd5e1" />
                   </TouchableOpacity>
                 )}
@@ -72,7 +80,7 @@ export default function Weight() {
                 </Text>
                 <Text className="text-slate-400 text-sm">kg</Text>
                 {postEntry && (
-                  <TouchableOpacity className="mt-2" onPress={() => deleteWeightEntry(db, postEntry.id)} accessibilityLabel="Delete post-dialysis weight">
+                  <TouchableOpacity className="mt-2" onPress={() => deleteWeightEntry(db, postEntry.id).catch(() => {})} accessibilityLabel="Delete post-dialysis weight">
                     <Trash2 size={14} color="#cbd5e1" />
                   </TouchableOpacity>
                 )}
@@ -111,9 +119,9 @@ export default function Weight() {
               onChangeText={setWeightInput}
             />
 
-            <TouchableOpacity className="bg-sky-600 rounded-xl py-4 items-center" onPress={handleSave}>
+            <TouchableOpacity className="bg-sky-600 rounded-xl py-4 items-center" onPress={handleSave} disabled={saving}>
               <Text className="text-white text-base font-bold">
-                Save {type === 'pre' ? 'Pre' : 'Post'}-Dialysis Weight
+                {saving ? 'Saving…' : `Save ${type === 'pre' ? 'Pre' : 'Post'}-Dialysis Weight`}
               </Text>
             </TouchableOpacity>
           </View>

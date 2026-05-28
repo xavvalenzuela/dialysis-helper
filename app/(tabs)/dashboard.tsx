@@ -60,11 +60,17 @@ export default function Dashboard() {
     return () => sub.remove();
   }, [load]);
 
-  useEffect(() => {
-    db.getFirstAsync<{ value: string }>('SELECT value FROM settings WHERE key = ?', ['user_name'])
-      .then(row => { if (row?.value) setUserName(row.value); })
-      .catch(() => {});
+  const loadUserName = useCallback(async () => {
+    const row = await db.getFirstAsync<{ value: string }>('SELECT value FROM settings WHERE key = ?', ['user_name'])
+      .catch(() => null);
+    setUserName(row?.value ?? '');
   }, [db]);
+
+  useEffect(() => {
+    loadUserName();
+    const sub = addDatabaseChangeListener(loadUserName);
+    return () => sub.remove();
+  }, [loadUserName]);
 
   const MIN_YEAR = 2020;
   const MIN_MONTH = 0;

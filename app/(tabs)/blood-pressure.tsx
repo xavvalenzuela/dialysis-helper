@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSQLiteContext, addDatabaseChangeListener } from 'expo-sqlite';
 import { Trash2 } from 'lucide-react-native';
@@ -59,7 +59,7 @@ export default function BloodPressure() {
 
   return (
     <SafeAreaView className="flex-1 bg-slate-50">
-      <KeyboardAvoidingView behavior="padding" className="flex-1">
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="flex-1">
         <ScrollView>
           <View className="px-4 py-5">
             <Text className="text-2xl font-bold text-sky-700">Blood Pressure</Text>
@@ -130,7 +130,7 @@ export default function BloodPressure() {
                     </View>
                     <View className="flex-row items-center" style={{ gap: 12 }}>
                       <Text className="text-slate-400 text-sm">{e.created_at.slice(11, 16)}</Text>
-                      <TouchableOpacity onPress={() => deleteBpEntry(db, e.id)} accessibilityLabel="Delete reading">
+                      <TouchableOpacity onPress={() => deleteBpEntry(db, e.id).catch(() => {})} accessibilityLabel="Delete reading">
                         <Trash2 size={16} color="#cbd5e1" />
                       </TouchableOpacity>
                     </View>

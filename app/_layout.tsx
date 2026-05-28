@@ -14,13 +14,13 @@ SplashScreen.preventAutoHideAsync();
 // RootLayout is mounted, so we hide the splash directly from onInit instead.
 async function onInit(db: SQLiteDatabase) {
   await initializeDb(db);
-  await setupNotificationChannel();
   await SplashScreen.hideAsync();
 }
 
 export default function RootLayout() {
-  // setNotificationHandler must run after mount — calling it at module level
-  // triggers an internal expo-notifications state update before React is ready.
+  // Both setNotificationHandler and setNotificationChannelAsync must run after
+  // mount — expo-notifications triggers internal state updates that crash if
+  // called before React is ready.
   useEffect(() => {
     Notifications.setNotificationHandler({
       handleNotification: async () => ({
@@ -31,6 +31,7 @@ export default function RootLayout() {
         shouldShowList: true,
       }),
     });
+    setupNotificationChannel();
   }, []);
 
   return (

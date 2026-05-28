@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView, Dimensions, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ScrollView, Dimensions, TextInput, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -23,6 +23,7 @@ export default function Onboarding() {
   const [step, setStep] = useState(0);
   const [nameInput, setNameInput] = useState('');
   const [limitInput, setLimitInput] = useState(String(DEFAULT_FLUID_LIMIT_ML));
+  const [finishing, setFinishing] = useState(false);
 
   const limitValid = /^\d+$/.test(limitInput.trim()) && parseInt(limitInput) > 0;
 
@@ -32,14 +33,21 @@ export default function Onboarding() {
   };
 
   const finish = async () => {
-    await db.runAsync(
-      `INSERT OR REPLACE INTO settings (key, value) VALUES ('onboarded', '1')`,
-    );
-    await updateSetting(db, 'user_name', nameInput.trim());
-    if (limitValid) {
-      await updateSetting(db, 'fluid_limit_ml', limitInput.trim());
+    if (finishing) return;
+    setFinishing(true);
+    try {
+      await db.runAsync(
+        `INSERT OR REPLACE INTO settings (key, value) VALUES ('onboarded', '1')`,
+      );
+      await updateSetting(db, 'user_name', nameInput.trim());
+      if (limitValid) {
+        await updateSetting(db, 'fluid_limit_ml', limitInput.trim());
+      }
+      router.replace('/(tabs)/dashboard');
+    } catch {
+      Alert.alert('Error', 'Could not save settings. Please try again.');
+      setFinishing(false);
     }
-    router.replace('/(tabs)/dashboard');
   };
 
   return (
@@ -213,9 +221,9 @@ export default function Onboarding() {
           {/* Button */}
           <TouchableOpacity
             className="rounded-2xl py-4 items-center"
-            style={{ backgroundColor: step === SLIDES.length - 1 && !limitValid ? '#bae6fd' : '#0284c7' }}
+            style={{ backgroundColor: (step === SLIDES.length - 1 && !limitValid) || finishing ? '#bae6fd' : '#0284c7' }}
             onPress={() => step < SLIDES.length - 1 ? goTo(step + 1) : finish()}
-            disabled={step === SLIDES.length - 1 && !limitValid}
+            disabled={(step === SLIDES.length - 1 && !limitValid) || finishing}
             activeOpacity={0.85}
           >
             <Text className="text-white text-base font-bold">

@@ -1,4 +1,5 @@
 import * as SQLite from 'expo-sqlite';
+import { DEFAULT_FLUID_LIMIT_ML, DEFAULT_TAP_AMOUNT_ML } from './constants';
 
 export async function initializeDb(db: SQLite.SQLiteDatabase) {
   await db.execAsync(`
@@ -50,8 +51,8 @@ export async function initializeDb(db: SQLite.SQLiteDatabase) {
       value TEXT NOT NULL
     );
 
-    INSERT OR IGNORE INTO settings (key, value) VALUES ('fluid_limit_ml', '950');
-    INSERT OR IGNORE INTO settings (key, value) VALUES ('fluid_tap_ml', '300');
+    INSERT OR IGNORE INTO settings (key, value) VALUES ('fluid_limit_ml', '${DEFAULT_FLUID_LIMIT_ML}');
+    INSERT OR IGNORE INTO settings (key, value) VALUES ('fluid_tap_ml', '${DEFAULT_TAP_AMOUNT_ML}');
   `);
 
   // If this is an existing install with data, skip onboarding

@@ -59,11 +59,18 @@ export default function Dashboard() {
     return () => sub.remove();
   }, [load]);
 
+  const MIN_YEAR = 2020;
+  const MIN_MONTH = 0;
+  const atMin = year === MIN_YEAR && month === MIN_MONTH;
+  const atMax = year === now.getFullYear() && month === now.getMonth();
+
   const prevMonth = () => {
+    if (atMin) return;
     if (month === 0) { setYear(y => y - 1); setMonth(11); }
     else setMonth(m => m - 1);
   };
   const nextMonth = () => {
+    if (atMax) return;
     if (month === 11) { setYear(y => y + 1); setMonth(0); }
     else setMonth(m => m + 1);
   };
@@ -82,18 +89,18 @@ export default function Dashboard() {
       <ScrollView>
         <View className="flex-row items-center justify-between px-4 py-5">
           <Text className="text-2xl font-bold text-sky-700">Dialysis Helper</Text>
-          <TouchableOpacity onPress={() => router.push('/onboarding' as any)} className="p-1">
+          <TouchableOpacity onPress={() => router.push('/onboarding' as any)} className="p-1" accessibilityLabel="Help and onboarding">
             <HelpCircle size={22} color="#94a3b8" />
           </TouchableOpacity>
         </View>
 
         <View className="flex-row items-center justify-between px-4 mb-4">
-          <TouchableOpacity onPress={prevMonth} className="p-2">
-            <ChevronLeft size={24} color="#0284c7" />
+          <TouchableOpacity onPress={prevMonth} className="p-2" disabled={atMin} accessibilityLabel="Previous month">
+            <ChevronLeft size={24} color={atMin ? '#cbd5e1' : '#0284c7'} />
           </TouchableOpacity>
           <Text className="text-lg font-semibold text-slate-700">{MONTHS[month]} {year}</Text>
-          <TouchableOpacity onPress={nextMonth} className="p-2">
-            <ChevronRight size={24} color="#0284c7" />
+          <TouchableOpacity onPress={nextMonth} className="p-2" disabled={atMax} accessibilityLabel="Next month">
+            <ChevronRight size={24} color={atMax ? '#cbd5e1' : '#0284c7'} />
           </TouchableOpacity>
         </View>
 

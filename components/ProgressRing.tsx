@@ -1,5 +1,6 @@
 import { View, Text } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
+import { fluidColor } from '../lib/constants';
 
 interface Props {
   progress: number;
@@ -14,7 +15,7 @@ export default function ProgressRing({ progress, size = 180, strokeWidth = 18, l
   const circ = 2 * Math.PI * r;
   const clamped = Math.min(Math.max(progress, 0), 1);
   const offset = circ * (1 - clamped);
-  const color = progress >= 1 ? '#ef4444' : progress >= 0.75 ? '#f97316' : '#0284c7';
+  const color = fluidColor(progress);
 
   return (
     <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>

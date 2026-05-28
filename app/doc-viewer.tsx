@@ -27,7 +27,10 @@ export default function DocViewer() {
 
   useEffect(() => {
     if (!isText || !uri) return;
-    new FsFile(uri).text()
+    const timeout = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('timeout')), 15_000),
+    );
+    Promise.race([new FsFile(uri).text(), timeout])
       .then(content => { setTextContent(content); setLoading(false); })
       .catch(() => { setError(true); setLoading(false); });
   }, [uri, isText]);
@@ -39,7 +42,7 @@ export default function DocViewer() {
     <SafeAreaView className="flex-1 bg-slate-900">
       {/* Header */}
       <View className="flex-row items-center px-4 py-3 border-b-2 border-slate-700">
-        <TouchableOpacity onPress={() => router.back()} className="mr-3 p-1">
+        <TouchableOpacity onPress={() => router.back()} className="mr-3 p-1" accessibilityLabel="Go back">
           <ChevronLeft size={24} color="#e2e8f0" />
         </TouchableOpacity>
         <Text className="text-slate-100 font-semibold flex-1" numberOfLines={1}>
@@ -50,13 +53,13 @@ export default function DocViewer() {
       {/* Zoom controls — PDF only */}
       {isPdf && !error && (
         <View className="flex-row items-center justify-center py-2 border-b-2 border-slate-700" style={{ gap: 28 }}>
-          <TouchableOpacity onPress={zoomOut} className="p-2">
+          <TouchableOpacity onPress={zoomOut} className="p-2" accessibilityLabel="Zoom out">
             <ZoomOut size={20} color={scale <= 0.5 ? '#475569' : '#94a3b8'} />
           </TouchableOpacity>
           <Text className="text-slate-400 text-sm w-12 text-center">
             {Math.round(scale * 100)}%
           </Text>
-          <TouchableOpacity onPress={zoomIn} className="p-2">
+          <TouchableOpacity onPress={zoomIn} className="p-2" accessibilityLabel="Zoom in">
             <ZoomIn size={20} color={scale >= 4.0 ? '#475569' : '#94a3b8'} />
           </TouchableOpacity>
         </View>

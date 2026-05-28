@@ -138,13 +138,13 @@ export default function Documents() {
                     <Text className="text-slate-400 text-xs">{doc.uploaded_at.slice(0, 10)}</Text>
                   </View>
                   <View className="flex-row items-center" style={{ gap: 16 }}>
-                    <TouchableOpacity onPress={() => handleView(doc)}>
+                    <TouchableOpacity onPress={() => handleView(doc)} accessibilityLabel={`View ${doc.name}`}>
                       <Eye size={17} color="#94a3b8" />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleShare(doc)}>
+                    <TouchableOpacity onPress={() => handleShare(doc)} accessibilityLabel={`Share ${doc.name}`}>
                       <Share2 size={17} color="#94a3b8" />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleDelete(doc)}>
+                    <TouchableOpacity onPress={() => handleDelete(doc)} accessibilityLabel={`Delete ${doc.name}`}>
                       <Trash2 size={17} color="#cbd5e1" />
                     </TouchableOpacity>
                   </View>

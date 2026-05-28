@@ -124,7 +124,7 @@ export default function BloodPressure() {
                     </View>
                     <View className="flex-row items-center" style={{ gap: 12 }}>
                       <Text className="text-slate-400 text-sm">{e.created_at.slice(11, 16)}</Text>
-                      <TouchableOpacity onPress={() => deleteBpEntry(db, e.id)}>
+                      <TouchableOpacity onPress={() => deleteBpEntry(db, e.id)} accessibilityLabel="Delete reading">
                         <Trash2 size={16} color="#cbd5e1" />
                       </TouchableOpacity>
                     </View>

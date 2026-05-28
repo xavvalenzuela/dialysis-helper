@@ -37,8 +37,8 @@ export default function Weight() {
     setWeightInput('');
   };
 
-  const fluidRemoved = preEntry && postEntry
-    ? (preEntry.weight_kg - postEntry.weight_kg).toFixed(2)
+  const fluidRemovedKg: number | null = preEntry && postEntry
+    ? preEntry.weight_kg - postEntry.weight_kg
     : null;
 
   return (
@@ -59,7 +59,7 @@ export default function Weight() {
                 </Text>
                 <Text className="text-slate-400 text-sm">kg</Text>
                 {preEntry && (
-                  <TouchableOpacity className="mt-2" onPress={() => deleteWeightEntry(db, preEntry.id)}>
+                  <TouchableOpacity className="mt-2" onPress={() => deleteWeightEntry(db, preEntry.id)} accessibilityLabel="Delete pre-dialysis weight">
                     <Trash2 size={14} color="#cbd5e1" />
                   </TouchableOpacity>
                 )}
@@ -72,17 +72,17 @@ export default function Weight() {
                 </Text>
                 <Text className="text-slate-400 text-sm">kg</Text>
                 {postEntry && (
-                  <TouchableOpacity className="mt-2" onPress={() => deleteWeightEntry(db, postEntry.id)}>
+                  <TouchableOpacity className="mt-2" onPress={() => deleteWeightEntry(db, postEntry.id)} accessibilityLabel="Delete post-dialysis weight">
                     <Trash2 size={14} color="#cbd5e1" />
                   </TouchableOpacity>
                 )}
               </View>
             </View>
 
-            {fluidRemoved !== null && (
+            {fluidRemovedKg !== null && (
               <View className="mt-4 pt-3 border-t-2 border-sky-200 items-center">
                 <Text className="text-slate-500 text-sm">Fluid removed</Text>
-                <Text className="text-xl font-bold text-sky-700 mt-0.5">{fluidRemoved} L</Text>
+                <Text className="text-xl font-bold text-sky-700 mt-0.5">{fluidRemovedKg.toFixed(2)} L</Text>
               </View>
             )}
           </View>

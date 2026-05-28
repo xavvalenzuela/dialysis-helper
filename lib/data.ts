@@ -53,6 +53,10 @@ export async function deleteBpEntry(db: SQLiteDatabase, id: number) {
 }
 
 // --- Symptoms (upsert: one entry per day, updated throughout the day) ---
+// NOTE: symptoms are stored as a JSON array string (e.g. '["Fatigue","Nausea"]') for
+// simplicity. Per-symptom SQL queries (e.g. "days with Fatigue this month") are not
+// possible without deserializing in JS. If trend analysis per symptom is ever needed,
+// normalize into a symptom_entries(id, date, symptom) table and migrate existing data.
 
 export async function addSymptomEntry(
   db: SQLiteDatabase,

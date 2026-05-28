@@ -6,23 +6,24 @@ import { Settings2, Trash2 } from 'lucide-react-native';
 import ProgressRing from '../../components/ProgressRing';
 import { addFluidEntry, deleteFluidEntry, updateSetting, getSetting } from '../../lib/data';
 import { todayISO, todayFormatted } from '../../lib/db';
+import { DEFAULT_FLUID_LIMIT_ML, DEFAULT_TAP_AMOUNT_ML, fluidColor, FLUID_WARN_THRESHOLD } from '../../lib/constants';
 
 type FluidLog = { id: number; date: string; amount_ml: number; created_at: string };
 
 function getStatus(progress: number, remaining: number) {
-  if (progress >= 1)   return { msg: 'Daily limit reached', color: '#ef4444' };
-  if (progress >= 0.75) return { msg: `${remaining} ml remaining — limit approaching`, color: '#f97316' };
+  if (progress >= 1)                    return { msg: 'Daily limit reached', color: fluidColor(progress) };
+  if (progress >= FLUID_WARN_THRESHOLD) return { msg: `${remaining} ml remaining — limit approaching`, color: fluidColor(progress) };
   return { msg: `${remaining} ml remaining today`, color: '#64748b' };
 }
 
 export default function Fluid() {
   const db = useSQLiteContext();
   const [entries, setEntries] = useState<FluidLog[]>([]);
-  const [limit, setLimit] = useState(950);
-  const [tapAmount, setTapAmount] = useState(300);
+  const [limit, setLimit] = useState(DEFAULT_FLUID_LIMIT_ML);
+  const [tapAmount, setTapAmount] = useState(DEFAULT_TAP_AMOUNT_ML);
   const [showSettings, setShowSettings] = useState(false);
-  const [limitInput, setLimitInput] = useState('950');
-  const [tapInput, setTapInput] = useState('300');
+  const [limitInput, setLimitInput] = useState(String(DEFAULT_FLUID_LIMIT_ML));
+  const [tapInput, setTapInput] = useState(String(DEFAULT_TAP_AMOUNT_ML));
 
   const load = useCallback(async () => {
     const rows = await db.getAllAsync<FluidLog>(
@@ -67,7 +68,7 @@ export default function Fluid() {
             <Text className="text-2xl font-bold text-sky-700">Fluid Intake</Text>
             <Text className="text-slate-400 text-sm mt-0.5">{todayFormatted()}</Text>
           </View>
-          <TouchableOpacity onPress={() => setShowSettings(s => !s)}>
+          <TouchableOpacity onPress={() => setShowSettings(s => !s)} accessibilityLabel="Fluid settings">
             <Settings2 size={22} color="#0284c7" />
           </TouchableOpacity>
         </View>
@@ -140,7 +141,7 @@ export default function Fluid() {
           <View className="px-4 pb-4 pt-2">
             <TouchableOpacity
               className="rounded-2xl py-5 items-center"
-              style={{ backgroundColor: isOver ? '#ef4444' : '#0284c7' }}
+              style={{ backgroundColor: fluidColor(progress) }}
               onPress={() => addFluidEntry(db, tapAmount)}
               activeOpacity={0.8}
             >
@@ -164,7 +165,7 @@ export default function Fluid() {
                 </View>
                 <View className="flex-row items-center" style={{ gap: 12 }}>
                   <Text className="text-slate-400 text-sm">{e.created_at.slice(11, 16)}</Text>
-                  <TouchableOpacity onPress={() => deleteFluidEntry(db, e.id)}>
+                  <TouchableOpacity onPress={() => deleteFluidEntry(db, e.id)} accessibilityLabel="Delete fluid entry">
                     <Trash2 size={16} color="#cbd5e1" />
                   </TouchableOpacity>
                 </View>

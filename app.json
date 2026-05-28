@@ -50,8 +50,10 @@
     },
     "extra": {
       "eas": {
-        "projectId": ""
-      }
-    }
+        "projectId": "3439884c-7b45-4499-8931-ab7d90ca3b89"
+      },
+      "router": {}
+    },
+    "owner": "xavalenzuela"
   }
 }

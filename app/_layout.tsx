@@ -10,18 +10,26 @@ import { setupNotificationChannel } from '../lib/notifications';
 
 SplashScreen.preventAutoHideAsync();
 
-// Stable module-level reference — calling setState inside onInit fires before
-// RootLayout is mounted, so we hide the splash directly from onInit instead.
+// Resolved by onInit when DB is ready. useEffect awaits it so that
+// SplashScreen.hideAsync() is always called after the component tree mounts —
+// calling hideAsync() inside onInit directly triggers a state update inside
+// ExpoRoot before it has finished mounting, producing the "can't update state
+// on an unmounted component" warning.
+let resolveDbReady: () => void;
+const dbReadyPromise = new Promise<void>(resolve => { resolveDbReady = resolve; });
+
 async function onInit(db: SQLiteDatabase) {
   await initializeDb(db);
-  await SplashScreen.hideAsync();
+  resolveDbReady();
 }
 
 export default function RootLayout() {
-  // Both setNotificationHandler and setNotificationChannelAsync must run after
-  // mount — expo-notifications triggers internal state updates that crash if
-  // called before React is ready.
   useEffect(() => {
+    // Hide splash only after mount AND db init are both done.
+    dbReadyPromise.then(() => SplashScreen.hideAsync());
+
+    // Both calls must be after mount — expo-notifications triggers internal
+    // state updates that crash if called before React is ready.
     Notifications.setNotificationHandler({
       handleNotification: async () => ({
         shouldShowBanner: true,

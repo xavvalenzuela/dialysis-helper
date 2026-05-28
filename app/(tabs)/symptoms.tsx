@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ScrollView, KeyboardAvoidingView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSQLiteContext, addDatabaseChangeListener } from 'expo-sqlite';
 import { addSymptomEntry } from '../../lib/data';
@@ -14,6 +14,7 @@ export default function Symptoms() {
   const [notes, setNotes] = useState('');
   const [existing, setExisting] = useState<SymptomLog | null>(null);
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const load = useCallback(async () => {
     const row = await db.getFirstAsync<SymptomLog>(
@@ -22,7 +23,11 @@ export default function Symptoms() {
     );
     setExisting(row ?? null);
     if (row) {
-      setSelected(JSON.parse(row.symptoms) as string[]);
+      try {
+        setSelected(JSON.parse(row.symptoms) as string[]);
+      } catch {
+        setSelected([]);
+      }
       setNotes(row.notes ?? '');
     }
   }, [db]);
@@ -41,8 +46,15 @@ export default function Symptoms() {
   };
 
   const handleSave = async () => {
-    await addSymptomEntry(db, selected, notes);
-    setSaved(true);
+    setSaving(true);
+    try {
+      await addSymptomEntry(db, selected, notes);
+      setSaved(true);
+    } catch {
+      Alert.alert('Error', 'Could not save entry.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -88,6 +100,7 @@ export default function Symptoms() {
             <TouchableOpacity
               className={`rounded-xl py-4 items-center ${saved ? 'bg-green-500' : 'bg-sky-600'}`}
               onPress={handleSave}
+              disabled={saving}
             >
               <Text className="text-white text-base font-bold">
                 {saved ? '✓ Saved' : existing ? 'Update Entry' : 'Save Entry'}

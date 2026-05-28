@@ -74,19 +74,21 @@ export async function initializeDb(db: SQLite.SQLiteDatabase) {
   );
   const pulseCol = tableInfo.find(c => c.name === 'pulse');
   if (pulseCol?.notnull === 1) {
-    await db.execAsync(`
-      CREATE TABLE _bp_new (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        date TEXT NOT NULL,
-        systolic INTEGER NOT NULL,
-        diastolic INTEGER NOT NULL,
-        pulse INTEGER,
-        created_at TEXT NOT NULL DEFAULT (datetime('now'))
-      );
-      INSERT INTO _bp_new SELECT * FROM bp_logs;
-      DROP TABLE bp_logs;
-      ALTER TABLE _bp_new RENAME TO bp_logs;
-    `);
+    await db.withTransactionAsync(async () => {
+      await db.execAsync(`
+        CREATE TABLE _bp_new (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          date TEXT NOT NULL,
+          systolic INTEGER NOT NULL,
+          diastolic INTEGER NOT NULL,
+          pulse INTEGER,
+          created_at TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+        INSERT INTO _bp_new SELECT * FROM bp_logs;
+        DROP TABLE bp_logs;
+        ALTER TABLE _bp_new RENAME TO bp_logs;
+      `);
+    });
   }
 }
 

@@ -22,6 +22,7 @@ export default function BloodPressure() {
   const [systolic, setSystolic] = useState('');
   const [diastolic, setDiastolic] = useState('');
   const [pulse, setPulse] = useState('');
+  const [saving, setSaving] = useState(false);
   const diastolicRef = useRef<TextInput>(null);
   const pulseRef = useRef<TextInput>(null);
 
@@ -40,15 +41,20 @@ export default function BloodPressure() {
   }, [load]);
 
   const handleSave = async () => {
-    const s = parseInt(systolic);
-    const d = parseInt(diastolic);
-    const p = pulse.trim() ? parseInt(pulse) : null;
-    if (!s || !d || s <= 0 || d <= 0) return;
-    if (p !== null && p <= 0) return;
-    await addBpEntry(db, s, d, p);
-    setSystolic('');
-    setDiastolic('');
-    setPulse('');
+    const s = parseInt(systolic, 10);
+    const d = parseInt(diastolic, 10);
+    const p = pulse.trim() ? parseInt(pulse, 10) : null;
+    if (isNaN(s) || isNaN(d) || s < 40 || s > 300 || d < 20 || d > 200) return;
+    if (p !== null && (isNaN(p) || p < 20 || p > 300)) return;
+    setSaving(true);
+    try {
+      await addBpEntry(db, s, d, p);
+      setSystolic('');
+      setDiastolic('');
+      setPulse('');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -101,8 +107,8 @@ export default function BloodPressure() {
               <Text className="flex-1 text-center text-xs text-slate-400">Pulse (opt.)</Text>
             </View>
 
-            <TouchableOpacity className="bg-sky-600 rounded-xl py-4 items-center" onPress={handleSave}>
-              <Text className="text-white text-base font-bold">Log Reading</Text>
+            <TouchableOpacity className="bg-sky-600 rounded-xl py-4 items-center" onPress={handleSave} disabled={saving}>
+              <Text className="text-white text-base font-bold">{saving ? 'Saving…' : 'Log Reading'}</Text>
             </TouchableOpacity>
           </View>
 

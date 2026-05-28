@@ -24,6 +24,7 @@ export default function Fluid() {
   const [showSettings, setShowSettings] = useState(false);
   const [limitInput, setLimitInput] = useState(String(DEFAULT_FLUID_LIMIT_ML));
   const [tapInput, setTapInput] = useState(String(DEFAULT_TAP_AMOUNT_ML));
+  const [tapping, setTapping] = useState(false);
 
   const load = useCallback(async () => {
     const rows = await db.getAllAsync<FluidLog>(
@@ -33,8 +34,10 @@ export default function Fluid() {
     setEntries(rows);
     const lim = await getSetting(db, 'fluid_limit_ml');
     const tap = await getSetting(db, 'fluid_tap_ml');
-    if (lim) { setLimit(Number(lim)); setLimitInput(lim); }
-    if (tap) { setTapAmount(Number(tap)); setTapInput(tap); }
+    const limNum = Number(lim);
+    const tapNum = Number(tap);
+    if (lim && !isNaN(limNum) && limNum > 0) { setLimit(limNum); setLimitInput(lim); }
+    if (tap && !isNaN(tapNum) && tapNum > 0) { setTapAmount(tapNum); setTapInput(tap); }
   }, [db]);
 
   useEffect(() => {
@@ -142,7 +145,12 @@ export default function Fluid() {
             <TouchableOpacity
               className="rounded-2xl py-5 items-center"
               style={{ backgroundColor: fluidColor(progress) }}
-              onPress={() => addFluidEntry(db, tapAmount)}
+              onPress={async () => {
+                if (tapping) return;
+                setTapping(true);
+                try { await addFluidEntry(db, tapAmount); } finally { setTapping(false); }
+              }}
+              disabled={tapping}
               activeOpacity={0.8}
             >
               <Text className="text-white text-xl font-bold">💧 + {tapAmount} ml</Text>

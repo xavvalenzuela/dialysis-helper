@@ -62,6 +62,10 @@ export default function DayDetail() {
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
   const [symptomSaved, setSymptomSaved] = useState(false);
+  const [savingWeight, setSavingWeight] = useState(false);
+  const [savingBp, setSavingBp] = useState(false);
+  const [savingSymptoms, setSavingSymptoms] = useState(false);
+  const [tapping, setTapping] = useState(false);
   // prevent DB reload from clobbering unsaved symptom edits
   const symptomDirty = useRef(false);
 
@@ -81,11 +85,17 @@ export default function DayDetail() {
     setBpLogs(bl);
     if (!symptomDirty.current) {
       setSymptomLog(sl ?? null);
-      setSelectedSymptoms(sl ? (JSON.parse(sl.symptoms) as string[]) : []);
+      let parsedSymptoms: string[] = [];
+      try {
+        if (sl?.symptoms) parsedSymptoms = JSON.parse(sl.symptoms) as string[];
+      } catch { /* fallback to empty */ }
+      setSelectedSymptoms(parsedSymptoms);
       setNotes(sl?.notes ?? '');
     }
-    if (lim) setFluidLimit(Number(lim));
-    if (tap) setTapAmount(Number(tap));
+    const limNum = Number(lim);
+    const tapNum = Number(tap);
+    if (lim && !isNaN(limNum) && limNum > 0) setFluidLimit(limNum);
+    if (tap && !isNaN(tapNum) && tapNum > 0) setTapAmount(tapNum);
   }, [db, date]);
 
   useEffect(() => {
@@ -102,18 +112,28 @@ export default function DayDetail() {
   const handleSaveWeight = async () => {
     const kg = parseFloat(weightInput);
     if (isNaN(kg) || kg <= 0) return;
-    await addWeightEntry(db, weightType, kg, date);
-    setWeightInput('');
+    setSavingWeight(true);
+    try {
+      await addWeightEntry(db, weightType, kg, date);
+      setWeightInput('');
+    } finally {
+      setSavingWeight(false);
+    }
   };
 
   const handleSaveBp = async () => {
-    const s = parseInt(systolic);
-    const d = parseInt(diastolic);
-    const p = pulse.trim() ? parseInt(pulse) : null;
-    if (!s || !d || s <= 0 || d <= 0) return;
-    if (p !== null && p <= 0) return;
-    await addBpEntry(db, s, d, p, date);
-    setSystolic(''); setDiastolic(''); setPulse('');
+    const s = parseInt(systolic, 10);
+    const d = parseInt(diastolic, 10);
+    const p = pulse.trim() ? parseInt(pulse, 10) : null;
+    if (isNaN(s) || isNaN(d) || s < 40 || s > 300 || d < 20 || d > 200) return;
+    if (p !== null && (isNaN(p) || p < 20 || p > 300)) return;
+    setSavingBp(true);
+    try {
+      await addBpEntry(db, s, d, p, date);
+      setSystolic(''); setDiastolic(''); setPulse('');
+    } finally {
+      setSavingBp(false);
+    }
   };
 
   const toggleSymptom = (symptom: string) => {
@@ -125,9 +145,16 @@ export default function DayDetail() {
   };
 
   const handleSaveSymptoms = async () => {
-    await addSymptomEntry(db, selectedSymptoms, notes, date);
-    symptomDirty.current = false;
-    setSymptomSaved(true);
+    setSavingSymptoms(true);
+    try {
+      await addSymptomEntry(db, selectedSymptoms, notes, date);
+      symptomDirty.current = false;
+      setSymptomSaved(true);
+    } catch {
+      Alert.alert('Error', 'Could not save symptoms.');
+    } finally {
+      setSavingSymptoms(false);
+    }
   };
 
   const handleExport = async () => {
@@ -233,7 +260,12 @@ export default function DayDetail() {
             </View>
             <TouchableOpacity
               className="bg-sky-600 rounded-xl py-4 items-center mb-4"
-              onPress={() => addFluidEntry(db, tapAmount, date)}
+              onPress={async () => {
+                if (tapping) return;
+                setTapping(true);
+                try { await addFluidEntry(db, tapAmount, date); } finally { setTapping(false); }
+              }}
+              disabled={tapping}
               activeOpacity={0.8}
             >
               <Text className="text-white text-base font-bold">+ {tapAmount} ml</Text>
@@ -306,9 +338,9 @@ export default function DayDetail() {
               value={weightInput}
               onChangeText={setWeightInput}
             />
-            <TouchableOpacity className="bg-sky-600 rounded-xl py-3 items-center" onPress={handleSaveWeight}>
+            <TouchableOpacity className="bg-sky-600 rounded-xl py-3 items-center" onPress={handleSaveWeight} disabled={savingWeight}>
               <Text className="text-white font-bold">
-                Save {weightType === 'pre' ? 'Pre' : 'Post'}-Dialysis Weight
+                {savingWeight ? 'Saving…' : `Save ${weightType === 'pre' ? 'Pre' : 'Post'}-Dialysis Weight`}
               </Text>
             </TouchableOpacity>
           </SectionCard>
@@ -354,8 +386,8 @@ export default function DayDetail() {
               <Text className="flex-1 text-center text-xs text-slate-400">Diastolic</Text>
               <Text className="flex-1 text-center text-xs text-slate-400">Pulse</Text>
             </View>
-            <TouchableOpacity className="bg-sky-600 rounded-xl py-3 items-center mb-4" onPress={handleSaveBp}>
-              <Text className="text-white font-bold">Log Reading</Text>
+            <TouchableOpacity className="bg-sky-600 rounded-xl py-3 items-center mb-4" onPress={handleSaveBp} disabled={savingBp}>
+              <Text className="text-white font-bold">{savingBp ? 'Saving…' : 'Log Reading'}</Text>
             </TouchableOpacity>
             {bpLogs.map(bp => {
               const status = bpStatus(bp.systolic, bp.diastolic);
@@ -417,9 +449,10 @@ export default function DayDetail() {
             <TouchableOpacity
               className={`rounded-xl py-3 items-center ${symptomSaved ? 'bg-green-500' : 'bg-sky-600'}`}
               onPress={handleSaveSymptoms}
+              disabled={savingSymptoms}
             >
               <Text className="text-white font-bold">
-                {symptomSaved ? '✓ Saved' : symptomLog ? 'Update Entry' : 'Save Entry'}
+                {savingSymptoms ? 'Saving…' : symptomSaved ? '✓ Saved' : symptomLog ? 'Update Entry' : 'Save Entry'}
               </Text>
             </TouchableOpacity>
           </SectionCard>

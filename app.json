@@ -22,7 +22,7 @@
         "backgroundColor": "#0ea5e9"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.xavvalenzuela.dialysishelper",
+      "package": "com.dhelper.app",
       "versionCode": 1,
       "permissions": [
         "android.permission.POST_NOTIFICATIONS"
